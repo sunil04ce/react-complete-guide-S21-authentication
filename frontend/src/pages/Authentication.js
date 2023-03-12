@@ -11,7 +11,7 @@ export async function action({ request }) {
   const searchParams = new URL(request.url).searchParams;
   const mode = searchParams.get('mode') || 'login';
 
-  if (mode != 'login' && mode != 'signup') {
+  if (mode !== 'login' && mode !== 'signup') {
     throw json({ message: 'Unsupported mode.' }, { status: 422 });
   }
 
@@ -41,6 +41,9 @@ export async function action({ request }) {
   const token = resData.token;
 
   localStorage.setItem('token', token);
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + 1);
+  localStorage.setItem('expiration', expiration.toISOString());
 
   return redirect('/');
 };
